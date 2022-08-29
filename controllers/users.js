@@ -22,6 +22,9 @@ module.exports.getUserId = async (req, res) => {
     }
     return res.status(200).send(user);
   } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id пользователя' });
+    }
     return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
   }
 };
