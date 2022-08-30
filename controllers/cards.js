@@ -10,7 +10,7 @@ module.exports.getCards = async (req, res) => {
     const cards = await Card.find({});
     res.status(200).send(cards);
   } catch (err) {
-    res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -24,7 +24,7 @@ module.exports.createCard = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании карточки' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -39,7 +39,7 @@ module.exports.deleteCard = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -58,10 +58,7 @@ module.exports.likeCard = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
     }
-    if (err.name === 'ValidationError') {
-      return res.status(DATA_ERROR_CODE).send({ message: ' Переданы некорректные данные для постановки лайка' });
-    }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -80,9 +77,6 @@ module.exports.dislikeCard = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
     }
-    if (err.name === 'ValidationError') {
-      return res.status(DATA_ERROR_CODE).send({ message: ' Переданы некорректные данные для снятия лайка' });
-    }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };

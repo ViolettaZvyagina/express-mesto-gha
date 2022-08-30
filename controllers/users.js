@@ -10,7 +10,7 @@ module.exports.getUsers = async (req, res) => {
     const users = await User.find({});
     res.status(200).send(users);
   } catch (err) {
-    res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -25,7 +25,7 @@ module.exports.getUserId = async (req, res) => {
     if (err.name === 'CastError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id пользователя' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -38,7 +38,7 @@ module.exports.createUser = async (req, res) => {
     if (err.name === 'ValidationError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -53,15 +53,15 @@ module.exports.updateProfile = async (req, res) => {
     if (!user) {
       return res.status(UNFOUND_ERROR_CODE).send(({ message: 'Пользователь по указанному _id не найден' }));
     }
-    if (!name || !about) {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
-    }
     return res.status(200).send(user);
   } catch (err) {
-    if (err.name === 'ValidationError') {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя', ...err });
+    if (err.name === 'CastError') {
+      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id пользователя' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    if (err.name === 'ValidationError') {
+      return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
+    }
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };
 
@@ -76,14 +76,14 @@ module.exports.updateAvatar = async (req, res) => {
     if (!user) {
       return res.status(UNFOUND_ERROR_CODE).send(({ message: 'Пользователь по указанному _id не найден' }));
     }
-    if (!avatar) {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
-    }
     return res.status(200).send(user);
   } catch (err) {
+    if (err.name === 'CastError') {
+      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id пользователя' });
+    }
     if (err.name === 'ValidationError') {
       return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании пользователя' });
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка', ...err });
+    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
   }
 };

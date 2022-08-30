@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint"
+    "lint": "npx eslint ."
   },
   "repository": {
     "type": "git",
@@ -27,7 +27,6 @@
   },
   "devDependencies": {
     "eslint": "^8.22.0",
-    "eslint-plugin-react": "^7.31.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",
     "nodemon": "^2.0.19"
