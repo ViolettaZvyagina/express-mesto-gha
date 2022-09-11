@@ -30,10 +30,15 @@ module.exports.createCard = async (req, res) => {
 
 module.exports.deleteCard = async (req, res) => {
   try {
-    const card = await Card.findByIdAndRemove(req.params.id);
+    const owner = req.user._id;
+    const card = await Card.findById(req.params.id);
     if (!card) {
-      return res.status(UNFOUND_ERROR_CODE).send(({ message: 'Карточка по указанному _id не найдена' }));
+      return res.status(UNFOUND_ERROR_CODE).send({ message: 'Карточка по указанному _id не найдена' });
     }
+    if (card.owner.toString() !== owner) {
+      return res.status(UNFOUND_ERROR_CODE).send({ message: 'Нет прав на удаление карточки' });
+    }
+    await Card.findByIdAndRemove(req.params.id);
     return res.status(200).send(card);
   } catch (err) {
     if (err.name === 'CastError') {
