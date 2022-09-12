@@ -1,20 +1,18 @@
 const Card = require('../models/card');
-const {
-  SERVER_ERROR_CODE,
-  DATA_ERROR_CODE,
-  UNFOUND_ERROR_CODE,
-} = require('../errors');
+const NotFoundError = require('../errors/notFoundError');
+const ValidateError = require('../errors/validateError');
+const ForbiddenError = require('../errors/forbiddenError');
 
-module.exports.getCards = async (req, res) => {
+module.exports.getCards = async (req, res, next) => {
   try {
     const cards = await Card.find({});
     res.status(200).send(cards);
   } catch (err) {
-    res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
+    next(err);
   }
 };
 
-module.exports.createCard = async (req, res) => {
+module.exports.createCard = async (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   try {
@@ -22,33 +20,33 @@ module.exports.createCard = async (req, res) => {
     return res.status(201).send(card);
   } catch (err) {
     if (err.name === 'ValidationError') {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Переданы некорректные данные при создании карточки' });
+      next(new ValidateError('Переданы некорректные данные при создании карточки'));
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
+    return next(err);
   }
 };
 
-module.exports.deleteCard = async (req, res) => {
+module.exports.deleteCard = async (req, res, next) => {
   try {
     const owner = req.user._id;
     const card = await Card.findById(req.params.id);
     if (!card) {
-      return res.status(UNFOUND_ERROR_CODE).send({ message: 'Карточка по указанному _id не найдена' });
+      throw new NotFoundError('Карточка по указанному _id не найдена');
     }
     if (card.owner.toString() !== owner) {
-      return res.status(UNFOUND_ERROR_CODE).send({ message: 'Нет прав на удаление карточки' });
+      throw new ForbiddenError('Нет прав на удаление карточки');
     }
     await Card.findByIdAndRemove(req.params.id);
     return res.status(200).send(card);
   } catch (err) {
     if (err.name === 'CastError') {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
+      next(new ValidateError('Передан некорректный id карточки'));
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
+    return next(err);
   }
 };
 
-module.exports.likeCard = async (req, res) => {
+module.exports.likeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.id,
@@ -56,18 +54,18 @@ module.exports.likeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      return res.status(UNFOUND_ERROR_CODE).send(({ message: 'Карточка по указанному _id не найдена' }));
+      throw new NotFoundError('Карточка по указанному _id не найдена');
     }
     return res.status(200).send(card);
   } catch (err) {
     if (err.name === 'CastError') {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
+      next(new ValidateError('Передан некорректный id карточки'));
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
+    return next(err);
   }
 };
 
-module.exports.dislikeCard = async (req, res) => {
+module.exports.dislikeCard = async (req, res, next) => {
   try {
     const card = await Card.findByIdAndUpdate(
       req.params.id,
@@ -75,13 +73,13 @@ module.exports.dislikeCard = async (req, res) => {
       { new: true },
     );
     if (!card) {
-      return res.status(UNFOUND_ERROR_CODE).send(({ message: 'Карточка по указанному _id не найдена' }));
+      throw new NotFoundError('Карточка по указанному _id не найдена');
     }
     return res.status(200).send(card);
   } catch (err) {
     if (err.name === 'CastError') {
-      return res.status(DATA_ERROR_CODE).send({ message: 'Передан некорректный _id карточки' });
+      next(new ValidateError('Передан некорректный id карточки'));
     }
-    return res.status(SERVER_ERROR_CODE).send({ message: 'На сервере произошла ошибка' });
+    return next(err);
   }
 };

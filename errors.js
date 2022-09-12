@@ -1,9 +1,0 @@
-const SERVER_ERROR_CODE = 500;
-const DATA_ERROR_CODE = 400;
-const UNFOUND_ERROR_CODE = 404;
-
-module.exports = {
-  SERVER_ERROR_CODE,
-  DATA_ERROR_CODE,
-  UNFOUND_ERROR_CODE,
-};
