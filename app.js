@@ -31,12 +31,12 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().required().min(6),
-      avatar: Joi.string().required()
+      avatar: Joi.string()
         .pattern(
           /https?:\/\/(www\.)?[\w\W]+#?$/,
         ),
-      name: Joi.string().required().min(2).max(30),
-      about: Joi.string().required().min(2).max(30),
+      name: Joi.string().min(2).max(30),
+      about: Joi.string().min(2).max(30),
     }),
   }),
   createUser,
