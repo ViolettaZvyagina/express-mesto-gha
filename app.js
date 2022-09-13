@@ -7,6 +7,7 @@ const { errors } = require('celebrate');
 const NotFoundError = require('./errors/notFoundError');
 const { createUser, login } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
+const { validateUrl } = require('./middlewares/validation');
 
 const { PORT = 3000 } = process.env;
 
@@ -32,10 +33,7 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().required().min(6),
-      avatar: Joi.string()
-        .pattern(
-          /https?:\/\/(www\.)?[\w\W]+#?$/,
-        ),
+      avatar: Joi.string().required().custom(validateUrl),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
     }),

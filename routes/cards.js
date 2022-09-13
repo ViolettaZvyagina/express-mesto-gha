@@ -1,5 +1,6 @@
 const cardRouter = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { validateUrl } = require('../middlewares/validation');
 
 const {
   getCards,
@@ -15,9 +16,7 @@ cardRouter.post(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
-      link: Joi.string().required().pattern(
-        /https?:\/\/(www\.)?[\w\W]+#?$/,
-      ),
+      link: Joi.string().required().custom(validateUrl),
     }),
   }),
   createCard,
