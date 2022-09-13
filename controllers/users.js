@@ -4,7 +4,6 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 const ValidateError = require('../errors/validateError');
 const ConflictError = require('../errors/conflictError');
-const UnauthorizedError = require('../errors/unauthorizedError');
 
 module.exports.getUsers = async (req, res, next) => {
   try {
@@ -117,9 +116,6 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
       });
       res.send({ token });
-    })
-    .catch(() => {
-      next(new UnauthorizedError('Отсутсвует токен'));
     })
     .catch(next);
 };
