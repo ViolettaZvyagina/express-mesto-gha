@@ -118,9 +118,9 @@ module.exports.login = (req, res, next) => {
       });
       res.send({ token });
     })
-    /*.catch(() => {
+    .catch(() => {
       next(new UnauthorizedError('Отсутсвует токен'));
-    }) */
+    })
     .catch(next);
 };
 
