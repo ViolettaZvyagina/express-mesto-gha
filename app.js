@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
+const { errors } = require('celebrate');
 const { NotFoundError } = require('./errors/notFoundError');
 const { createUser, login } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
@@ -57,6 +58,8 @@ async function main() {
     useNewUrlParser: true,
     useUnifiedTopology: false,
   });
+
+  app.use(errors());
 
   app.use((err, req, res, next) => {
     const { statusCode = 500, message } = err;
