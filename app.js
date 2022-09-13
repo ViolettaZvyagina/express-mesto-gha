@@ -50,7 +50,8 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'));
+  next(new NotFoundError('Страница не найдена'))
+    .catch(next);
 });
 
 async function main() {
