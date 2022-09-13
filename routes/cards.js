@@ -26,12 +26,28 @@ cardRouter.delete(
   '/:id',
   celebrate({
     body: Joi.object().keys({
-      cardId: Joi.string().required().length(24).hex(),
+      id: Joi.string().required().length(24).hex(),
     }),
   }),
   deleteCard,
 );
-cardRouter.put('/:id/likes', likeCard);
-cardRouter.delete('/:id/likes', dislikeCard);
+cardRouter.put(
+  '/:id/likes',
+  celebrate({
+    body: Joi.object().keys({
+      id: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  likeCard,
+);
+cardRouter.delete(
+  '/:id/likes',
+  celebrate({
+    body: Joi.object().keys({
+      id: Joi.string().required().length(24).hex(),
+    }),
+  }),
+  dislikeCard,
+);
 
 module.exports = cardRouter;
