@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundError = require('../errors/notFoundError');
 const ValidateError = require('../errors/validateError');
 const ConflictError = require('../errors/conflictError');
+const UnauthorizedError = require('../errors/unauthorizedError');
 
 module.exports.getUsers = async (req, res, next) => {
   try {
@@ -106,9 +107,6 @@ module.exports.updateAvatar = async (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    next(new ValidateError('Необходимо заполнить поля email и пароль'));
-  }
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
@@ -119,6 +117,9 @@ module.exports.login = (req, res, next) => {
         httpOnly: true,
       });
       res.send({ token });
+    })
+    .catch(() => {
+      throw new UnauthorizedError('Необходимо заполнить поля email и пароль');
     })
     .catch(next);
 };
