@@ -33,7 +33,7 @@ app.post(
     body: Joi.object().keys({
       email: Joi.string().required().email(),
       password: Joi.string().required().required().min(6),
-      avatar: Joi.string().required().custom(validateUrl),
+      avatar: Joi.string().custom(validateUrl),
       name: Joi.string().min(2).max(30),
       about: Joi.string().min(2).max(30),
     }),
