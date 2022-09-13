@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
-const { NotFoundError } = require('./errors/notFoundError');
+const NotFoundError = require('./errors/notFoundError');
 const { createUser, login } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 
@@ -50,8 +50,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 
 app.use('*', (req, res, next) => {
-  next(new NotFoundError('Страница не найдена'))
-    .catch(next);
+  next(new NotFoundError('Страница не найдена'));
 });
 
 async function main() {
