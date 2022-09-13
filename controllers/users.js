@@ -106,6 +106,9 @@ module.exports.updateAvatar = async (req, res, next) => {
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    next(new ValidateError('Необходимо заполнить поля email и пароль'));
+  }
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
